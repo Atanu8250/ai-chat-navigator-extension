@@ -39,6 +39,7 @@ let sidebarExpanded = true;
 let rebuildScheduled = false;
 let cachedMessages = [];
 let lastMessageCount = 0;
+let activeMessageIndex = -1;
 
 /* -------------------------------------------------------------------------- */
 /*                            PANEL INITIALIZATION                             */
@@ -58,12 +59,32 @@ function initPanel() {
     <button id="cgpt-sidebar-toggle" title="Toggle sidebar">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
-    <header>User Messages</header>
+    <header id="cgpt-header">
+      <span>User Messages</span>
+      <div class="cgpt-nav-controls">
+        <button id="cgpt-prev-btn" title="Previous message">
+          <i class="fa-solid fa-chevron-up"></i>
+        </button>
+        <button id="cgpt-next-btn" title="Next message">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </header>
     <ul></ul>
   `;
 
   document.body.appendChild(navPanel);
   setupSidebarToggle();
+  
+  // Add navigation function for the nav-control buttons
+  navPanel
+    .querySelector("#cgpt-prev-btn")
+    .addEventListener("click", () => navigateToMessage(-1));
+
+  navPanel
+    .querySelector("#cgpt-next-btn")
+    .addEventListener("click", () => navigateToMessage(1));
+
 }
 
 /* -------------------------------------------------------------------------- */
@@ -113,7 +134,7 @@ function rebuildMessageList() {
   const list = navPanel.querySelector("ul");
   list.textContent = ""; // fast clear
 
-  messages.forEach((msg) => {
+  messages.forEach((msg, index) => {
     const item = document.createElement("li");
     item.className = "cgpt-msg-item";
 
@@ -146,6 +167,8 @@ function rebuildMessageList() {
 
     /* -------------------------- Navigation Only --------------------------- */
     item.addEventListener("click", () => {
+      activeMessageIndex = index;
+      
       scrollToMessage(msg.element);
     });
 
@@ -221,6 +244,30 @@ const observer = new MutationObserver((mutations) => {
 
 const chatRoot = document.querySelector("main") || document.body;
 observer.observe(chatRoot, { childList: true, subtree: true });
+
+/* -------------------------------------------------------------------------- */
+/*                       MESSAGE NAVIGATE USING BUTTONS                       */
+/* -------------------------------------------------------------------------- */
+
+function navigateToMessage(direction) {
+  const messages = collectUserMessages();
+  if (!messages.length) return;
+
+  // Initialize index if unset
+  if (activeMessageIndex === -1) {
+    activeMessageIndex = 0;
+  } else {
+    activeMessageIndex += direction;
+  }
+
+  // Clamp index
+  activeMessageIndex = Math.max(
+    0,
+    Math.min(activeMessageIndex, messages.length - 1)
+  );
+
+  scrollToMessage(messages[activeMessageIndex].element)
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                BOOTSTRAP                                   */
