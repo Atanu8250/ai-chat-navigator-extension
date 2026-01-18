@@ -30,6 +30,7 @@ Built to feel native, fast, and unobtrusive.
 
 - 🧠 **Designed for long chats** — no lag, no freezing  
 - 🧭 **One-click navigation** to any of your messages  
+- 🌗 **Theme support** use your browser theme (light/dark)
 - 📚 **Perfect for learning, coding, research, and brainstorming**  
 - 🎨 Clean UI that stays out of your way  
 - 🔐 Safe — does not collect or send any data  

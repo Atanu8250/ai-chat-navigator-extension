@@ -1,83 +1,166 @@
+/* =========================================================
+   Base Semantic Tokens (Do NOT theme here)
+   ========================================================= */
 :root {
-  --border-color: #2a2a2a;
-  --secondary-border-color: #1f1f1f;
-  --bg-color: #151515;
-  --secondary-bg-color: #1a1a1a;
-  --txt-color: #e5e5e5;
-  --secondary-txt-color: #bfbfbf;
+  --cgpt-font: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Layout */
+  --cgpt-sidebar-width: 320px;
+  --cgpt-transition: 400ms ease-in-out;
+
+  /* Accent (matches ChatGPT neutral blue tone) */
+  --cgpt-accent: #4285f4;
 }
 
+/* =========================================================
+   Light Theme (ChatGPT-aligned)
+   ========================================================= */
+@media (prefers-color-scheme: light) {
+  :root {
+    --cgpt-bg-primary: #ffffff;
+    --cgpt-bg-secondary: #f7f7f8;
+
+    --cgpt-border-primary: #e5e7eb;
+    --cgpt-border-secondary: #eef0f2;
+
+    --cgpt-text-primary: #111827;
+    --cgpt-text-secondary: #4b5563;
+
+    --cgpt-hover-bg: #f0f2f5;
+    --cgpt-icon-color: #374151;
+  }
+}
+
+/* =========================================================
+   Dark Theme (ChatGPT-aligned)
+   ========================================================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cgpt-bg-primary: #151515;
+    --cgpt-bg-secondary: #1a1a1a;
+
+    --cgpt-border-primary: #2a2a2a;
+    --cgpt-border-secondary: #1f1f1f;
+
+    --cgpt-text-primary: #e5e5e5;
+    --cgpt-text-secondary: #bfbfbf;
+
+    --cgpt-hover-bg: #202020;
+    --cgpt-icon-color: #d1d5db;
+  }
+}
+
+/* =========================================================
+   Sidebar Container
+   ========================================================= */
 #cgpt-msg-nav {
   position: fixed;
   top: 0;
   right: 0;
   height: 100vh;
-  background: var(--bg-color);
-  color: var(--txt-color);
-  font-family: system-ui, sans-serif;
+
+  width: 0;
+  background: var(--cgpt-bg-primary);
+  color: var(--cgpt-text-primary);
+
+  font-family: var(--cgpt-font);
   font-size: 13px;
-  border-left: 1px solid var(--border-color);
+
+  border-left: 1px solid var(--cgpt-border-primary);
   z-index: 9999;
   display: none;
-  transition: width 400ms ease-in-out;
+
+  transition: width var(--cgpt-transition);
 }
 
-
+/* Expanded / Collapsed States */
 #cgpt-msg-nav.expanded {
-  width: 320px;
-
-  & > #cgpt-sidebar-toggle > i {
-    transform: rotateZ(0deg);
-  }
+  width: var(--cgpt-sidebar-width);
 }
 
 #cgpt-msg-nav.collapsed {
-  width: 0px;
-
-  & > #cgpt-sidebar-toggle {
-    border: 2px solid #4285F4;
-    box-shadow: 0 0 15px 2px rgba(66, 133, 244, 0.6);
-  }
-  
-  & > #cgpt-sidebar-toggle:hover {
-    box-shadow: 0 0 25px 5px rgba(66, 133, 244, 0.8);
-  }
-
-  & > #cgpt-sidebar-toggle > i {
-    transform: rotateZ(180deg);
-  }
+  width: 0;
 }
 
+/* =========================================================
+   Sidebar Toggle Button
+   ========================================================= */
 #cgpt-msg-nav > #cgpt-sidebar-toggle {
   position: absolute;
   top: 23px;
   left: -20px;
-  backdrop-filter: blur(5px);
+
   height: 30px;
   aspect-ratio: 1;
+
   display: grid;
   place-items: center;
-  border: 1px solid var(--border-color);
+
+  background: var(--cgpt-bg-primary);
+  border: 1px solid var(--cgpt-border-primary);
   border-radius: 50%;
+
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+
   transition: box-shadow 0.3s ease-in-out;
 }
 
-#cgpt-sidebar-toggle > i {
+#cgpt-sidebar-toggle i {
+  color: var(--cgpt-icon-color);
   transition: transform 200ms ease-in-out;
 }
 
+/* Toggle Visual Feedback */
+#cgpt-msg-nav.expanded #cgpt-sidebar-toggle i {
+  transform: rotateZ(0deg);
+}
+
+#cgpt-msg-nav.collapsed #cgpt-sidebar-toggle {
+  border-color: var(--cgpt-accent);
+  box-shadow: 0 0 15px 2px color-mix(in srgb, var(--cgpt-accent) 60%, transparent);
+}
+
+#cgpt-msg-nav.collapsed #cgpt-sidebar-toggle:hover {
+  box-shadow: 0 0 25px 5px color-mix(in srgb, var(--cgpt-accent) 80%, transparent);
+}
+
+#cgpt-msg-nav.collapsed #cgpt-sidebar-toggle i {
+  transform: rotateZ(180deg);
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
 #cgpt-msg-nav header {
   padding: 10px;
   font-weight: 600;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--cgpt-border-primary);
 }
 
+/* =========================================================
+   Message List
+   ========================================================= */
 #cgpt-msg-nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
+
   height: calc(100vh - 42px);
+  overflow-y: auto;
+}
+
+/* =========================================================
+   Message Item
+   ========================================================= */
+.cgpt-msg-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--cgpt-border-secondary);
+  cursor: pointer;
+}
+
+.cgpt-msg-item:hover {
+  background: var(--cgpt-hover-bg);
 }
 
 .cgpt-msg-row {
@@ -86,37 +169,35 @@
   gap: 8px;
 }
 
-.cgpt-msg-item {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--secondary-border-color);
-  cursor: pointer;
-}
-
-.cgpt-msg-item:hover {
-  background: var(--secondary-bg-color);
-}
-
 .cgpt-msg-preview {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* =========================================================
+   Expandable Message Content
+   ========================================================= */
 .cgpt-msg-full {
   margin-top: 6px;
   white-space: pre-wrap;
   display: none;
-  color: var(--secondary-txt-color);
+  color: var(--cgpt-text-secondary);
 }
 
 .cgpt-msg-item.expanded .cgpt-msg-full {
   display: block;
 }
 
-.cgpt-msg-item .cgpt-expand-btn > i {
+/* =========================================================
+   Expand Button Icon
+   ========================================================= */
+.cgpt-msg-item .cgpt-expand-btn i {
+  color: var(--cgpt-icon-color);
   transform: rotateZ(0deg);
   transition: transform 200ms ease-in-out;
 }
-.cgpt-msg-item.expanded .cgpt-expand-btn > i {
+
+.cgpt-msg-item.expanded .cgpt-expand-btn i {
   transform: rotateZ(-180deg);
 }
