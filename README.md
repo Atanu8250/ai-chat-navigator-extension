@@ -19,6 +19,7 @@ This extension solves that by adding a **smart sidebar** that:
 - 📋 Lists **all your messages** in the conversation  
 - 🔍 Shows a **clean preview** of each message  
 - 📌 Lets you **jump instantly** to any message  
+- ⬆️⬇️ **Up/Down Navigation** — Jump to the previous or next user message instantly.
 - 🔽 Allows expanding a message to view its full content  
 - 🧱 Works smoothly even for **very long, heavy conversations**
 
